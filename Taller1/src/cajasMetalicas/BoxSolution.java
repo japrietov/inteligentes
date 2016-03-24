@@ -1,10 +1,11 @@
 package cajasMetalicas;
 
+import java.awt.Color;
 import java.util.List;
 
 public class BoxSolution {
 	private List<Piece> pieces;
-	private int requiredSteelSheets;
+	private int usedSteelSheets;
 	private double availableHeight;
 	private double availableWidth;
 	private double wastedArea;
@@ -15,22 +16,19 @@ public class BoxSolution {
 	}
 
 	public void calculateSolutionProperties() {
+		double x = 0;
+		double y = 0;
 		employedArea = 0;
-		requiredSteelSheets = 0;
+		usedSteelSheets = 0;
 		wastedArea = 0;
 
-		for (Piece piece : pieces) {
-			double remainingWidth = availableWidth - piece.getWidth();
-			double remainingHeight = availableHeight - piece.getHeight();
+		addNewSteelSheet();
 
-			if ((remainingHeight < 0) || (remainingWidth < 0)) {
-				calculateWastedArea();
-				addPieceToNewSteelSheet(piece.getWidth(), piece.getHeight());
-			} else {
-				employedArea += piece.getSize();
-				availableWidth = remainingWidth;
-				availableHeight = remainingHeight;
-			}
+		for (Piece piece : pieces) {
+			GUI.getInstance().addRectangle(x, y, piece.getWidth(), piece.getHeight(), Color.YELLOW);
+
+			x = piece.getWidth();
+			y = piece.getHeight();
 		}
 	}
 
@@ -39,11 +37,10 @@ public class BoxSolution {
 		employedArea = 0;
 	}
 
-	private void addPieceToNewSteelSheet(double width, double height) {
-		requiredSteelSheets++;
-
-		availableWidth = BoxRequirements.STEEL_SHEET_WIDTH - width;
-		availableHeight = BoxRequirements.STEEL_SHEET_HEIGHT - height;
+	private void addNewSteelSheet() {
+		usedSteelSheets++;
+		GUI.getInstance().addRectangle(0, 0, BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets,
+				BoxRequirements.STEEL_SHEET_HEIGHT, Color.RED);
 	}
 
 	public List<Piece> getPieces() {
@@ -55,7 +52,7 @@ public class BoxSolution {
 	}
 
 	public int getRequiredSteelSheets() {
-		return requiredSteelSheets;
+		return usedSteelSheets;
 	}
 
 	public double getWastedArea() {

@@ -7,9 +7,14 @@ import org.uncommons.watchmaker.framework.CandidateFactory;
 import org.uncommons.watchmaker.framework.EvolutionaryOperator;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 
-public class Main {
+import processing.core.PApplet;
 
-	public static void main(String[] args) {
+public class Main {
+	
+	public static void main(String[] args) throws InterruptedException {
+		PApplet.main(GUI.class.getName());
+		Thread.sleep(1000);
+
 		CandidateFactory<BoxSolution> candidateFactory = new SteelSheetCandidateFactory();
 		EvolutionaryOperator<SteelSheet> evolutionScheme;
 		FitnessEvaluator<SteelSheet> selectionStrategy;
@@ -17,19 +22,19 @@ public class Main {
 		// EvolutionEngine<SteelSheet> evolutionEngine = new
 		// GenerationalEvolutionEngine<>(
 		// candidateFactory, evolutionScheme, selectionStrategy, rng);
-
-		List<BoxSolution> generateRandomCandidate = candidateFactory.generateInitialPopulation(100,
+		
+		List<BoxSolution> generateRandomCandidate = candidateFactory.generateInitialPopulation(1,
 				random);
-
+				
 		BoxRequirements.getInstance().calculateIdealWastedArea();
-
+		
 		for (BoxSolution boxSolution : generateRandomCandidate) {
 			boxSolution.calculateSolutionProperties();
-
+			
 			System.out.println(
 					boxSolution.getRequiredSteelSheets() + "--" + boxSolution.getWastedArea());
-
+					
 		}
 	}
-
+	
 }
