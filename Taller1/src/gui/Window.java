@@ -28,7 +28,7 @@ public class Window extends JFrame {
 		g.setColor(backgroundColor);
 		g.fillRect((int) x + offset + 1, (int) y + offset + 1, (int) width - 1, (int) height - 1);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

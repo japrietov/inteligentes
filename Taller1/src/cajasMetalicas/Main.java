@@ -20,7 +20,7 @@ public class Main {
 		// GenerationalEvolutionEngine<>(
 		// candidateFactory, evolutionScheme, selectionStrategy, rng);
 
-		List<BoxSolution> generateRandomCandidate = candidateFactory.generateInitialPopulation(1, random);
+		List<BoxSolution> generateRandomCandidate = candidateFactory.generateInitialPopulation(3, random);
 
 		BoxRequirements.getInstance().calculateIdealWastedArea();
 

@@ -12,8 +12,6 @@ import gui.Window;
 public class BoxSolution {
 	private List<Piece> pieces;
 	private int usedSteelSheets;
-	private double availableHeight;
-	private double availableWidth;
 	private double wastedArea;
 	private double employedArea;
 
@@ -30,26 +28,37 @@ public class BoxSolution {
 		List<Double> lastWidths = new ArrayList<>();
 
 		addNewSteelSheet();
-		// Window.getInstance().drawRect(0, 0, 20, 30, Color.YELLOW);
-		// Window.getInstance().drawRect(20, 30, 20, 40, Color.YELLOW);
 
 		for (Piece piece : pieces) {
 			double nextY = y + piece.getHeight();
+			double nextx = x + piece.getWidth();
 
 			if (nextY > BoxRequirements.STEEL_SHEET_HEIGHT) {
 				x += Collections.max(lastWidths);
-				System.out.println(x);
+				nextx = x + piece.getWidth();
+
+				if (nextx > BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets) {
+					x = BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
+					y = 0;
+					addNewSteelSheet();
+				}
+
 				y = drawInNewColumn(x, piece);
 				lastWidths.clear();
 			} else {
+				if (nextx > BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets) {
+					x = BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
+					y = 0;
+					addNewSteelSheet();
+				}
+
 				Window.getInstance().drawRect(x, y, piece.getWidth(), piece.getHeight(), Color.YELLOW);
 				y = nextY;
 			}
 
-			//x += piece.getWidth();
 			lastWidths.add(piece.getWidth());
-			// y += piece.getHeight();
 		}
+
 	}
 
 	private double drawInNewColumn(double x, Piece piece) {
@@ -65,9 +74,12 @@ public class BoxSolution {
 	}
 
 	private void addNewSteelSheet() {
+		double x;
+
+		x = BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
+		Window.getInstance().drawRect(x, 0, BoxRequirements.STEEL_SHEET_WIDTH, BoxRequirements.STEEL_SHEET_HEIGHT,
+				Color.RED);
 		usedSteelSheets++;
-		Window.getInstance().drawRect(0, 0, BoxRequirements.STEEL_SHEET_WIDTH * usedSteelSheets,
-				BoxRequirements.STEEL_SHEET_HEIGHT, Color.RED);
 	}
 
 	public List<Piece> getPieces() {
