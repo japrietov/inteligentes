@@ -57,6 +57,7 @@ public class BoxSolution {
 			}
 
 			lastWidths.add(piece.getWidth());
+			employedArea += piece.getSize();
 		}
 
 	}
@@ -80,6 +81,8 @@ public class BoxSolution {
 		Window.getInstance().drawRect(x, 0, BoxRequirements.STEEL_SHEET_WIDTH, BoxRequirements.STEEL_SHEET_HEIGHT,
 				Color.RED);
 		usedSteelSheets++;
+		
+		calculateWastedArea();
 	}
 
 	public List<Piece> getPieces() {
