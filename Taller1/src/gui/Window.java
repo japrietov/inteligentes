@@ -7,15 +7,18 @@ import javax.swing.JFrame;
 
 public class Window extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private static Window instance;
 
 	public Window() {
 		setSize(800, 800);
+		setBackground(Color.BLACK);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLocationRelativeTo(null);
 	}
 
+	@Override
 	public void paint(Graphics g) {
 	}
 
@@ -27,11 +30,6 @@ public class Window extends JFrame {
 		g.drawRect((int) x + offset, (int) y + offset, (int) width, (int) height);
 		g.setColor(backgroundColor);
 		g.fillRect((int) x + offset + 1, (int) y + offset + 1, (int) width - 1, (int) height - 1);
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static Window getInstance() {
