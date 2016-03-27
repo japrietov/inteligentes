@@ -1,6 +1,6 @@
 package reactor;
 
-import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,94 +10,94 @@ import gui.Window;
 public class CuttingSolution {
 	private List<CuttingPiece> pieces;
 	private int usedSteelSheets;
-	private double wastedArea;
 	private double employedArea;
-	
+	private double x;
+	private double y;
+
 	public CuttingSolution(List<CuttingPiece> pieces) {
 		this.pieces = pieces;
 	}
-	
-	public void calculateSolutionProperties() {
-		double x = 0;
-		double y = 0;
+
+	private void calculateSolutionProperties() {
+		boolean drawSteelSheet = true;
+		double steelSheetWidth = CuttingRequirements.STEEL_SHEET_WIDTH;
+		double steelSheetHeight = CuttingRequirements.STEEL_SHEET_HEIGHT;
+		List<Double> lastColumnWidths = new ArrayList<>();
+		x = 0;
+		y = 0;
 		employedArea = 0;
-		usedSteelSheets = 0;
-		wastedArea = 0;
-		List<Double> lastWidths = new ArrayList<>();
-		
-		Window.getInstance().setBackground(Color.BLACK);
-		addNewSteelSheet();
-		
+		usedSteelSheets = 1;
+
+		Window.getInstance().clear();
+
 		for (CuttingPiece piece : pieces) {
+			Point drawingPoint = new Point((int) x, (int) y);
 			double nextY = y + piece.getHeight();
-			double nextx = x + piece.getWidth();
-			
-			if (nextY > CuttingRequirements.STEEL_SHEET_HEIGHT) {
-				x += Collections.max(lastWidths);
-				nextx = x + piece.getWidth();
-				
-				if (nextx > (CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets)) {
-					x = CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
-					y = 0;
-					addNewSteelSheet();
+			double nextX = x + piece.getWidth();
+
+			lastColumnWidths.add(piece.getWidth());
+
+			if ((nextX <= nextSteelSheetOrigin()) && (nextY <= steelSheetHeight)) {
+				y += piece.getHeight();
+			} else if ((nextX <= nextSteelSheetOrigin()) && (nextY > steelSheetHeight)) {
+				double lastColumnWidth = Collections.max(lastColumnWidths);
+
+				nextX = lastColumnWidth + piece.getWidth();
+				y = 0;
+
+				if (nextX > nextSteelSheetOrigin()) {
+					x = nextSteelSheetOrigin();
+					drawSteelSheet = true;
+					usedSteelSheets++;
+				} else {
+					x += lastColumnWidth;
 				}
-				
-				y = drawInNewColumn(x, piece);
-				lastWidths.clear();
+
+				drawingPoint.setLocation(x, y);
+				y += piece.getHeight();
+				lastColumnWidths.clear();
 			} else {
-				if (nextx > (CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets)) {
-					x = CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
-					y = 0;
-					addNewSteelSheet();
-				}
-				
-				Window.getInstance().drawRect(x, y, piece.getWidth(), piece.getHeight(),
-						Color.YELLOW);
-				y = nextY;
+				x = nextSteelSheetOrigin();
+				y = 0;
+				drawingPoint.setLocation(x, y);
+				y = piece.getHeight();
+				drawSteelSheet = true;
+				usedSteelSheets++;
+				lastColumnWidths.clear();
 			}
-			
-			lastWidths.add(piece.getWidth());
+
 			employedArea += piece.getSize();
+
+			if (drawSteelSheet) {
+				Window.getInstance().drawSteelSheet(drawingPoint);
+				drawSteelSheet = false;
+			}
+
+			Window.getInstance().drawCuttingPiece(drawingPoint, piece);
 		}
-		
+
 	}
-	
-	private double drawInNewColumn(double x, CuttingPiece piece) {
-		double y;
-		Window.getInstance().drawRect(x, 0, piece.getWidth(), piece.getHeight(), Color.YELLOW);
-		y = piece.getHeight();
-		return y;
+
+	private double nextSteelSheetOrigin() {
+		return CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
 	}
-	
-	private void calculateWastedArea() {
-		wastedArea += CuttingRequirements.getSteelSheetSize() - employedArea;
-		employedArea = 0;
-	}
-	
-	private void addNewSteelSheet() {
-		double x;
-		
-		x = CuttingRequirements.STEEL_SHEET_WIDTH * usedSteelSheets;
-		Window.getInstance().drawRect(x, 0, CuttingRequirements.STEEL_SHEET_WIDTH,
-				CuttingRequirements.STEEL_SHEET_HEIGHT, Color.RED);
-		usedSteelSheets++;
-		calculateWastedArea();
-	}
-	
+
 	public List<CuttingPiece> getPieces() {
 		return pieces;
 	}
-	
+
 	public void setPieces(List<CuttingPiece> pieces) {
 		this.pieces = pieces;
 	}
-	
+
 	public int getRequiredSteelSheets() {
 		return usedSteelSheets;
 	}
-	
+
 	public double getWastedArea() {
-		return wastedArea;
+		calculateSolutionProperties();
+
+		return (CuttingRequirements.getSteelSheetSize() * usedSteelSheets) - employedArea;
 	}
-	
+
 }

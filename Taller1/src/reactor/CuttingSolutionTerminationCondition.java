@@ -7,8 +7,11 @@ public class CuttingSolutionTerminationCondition implements TerminationCondition
 
 	@Override
 	public boolean shouldTerminate(PopulationData<?> populationData) {
+		CuttingSolution cuttingSolution = (CuttingSolution) populationData.getBestCandidate();
 
-		return populationData.getElapsedTime() > 6e4;
+		System.out.println(cuttingSolution.getRequiredSteelSheets());
+
+		return false;
 	}
 
 }
