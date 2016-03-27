@@ -2,12 +2,12 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 
 import javax.swing.JFrame;
 
 import reactor.CuttingPiece;
 import reactor.CuttingRequirements;
+import reactor.Point;
 
 public class Window extends JFrame {
 
@@ -38,19 +38,19 @@ public class Window extends JFrame {
 		sleep();
 	}
 
-	public void drawCuttingPiece(Point point, CuttingPiece piece) {
-		Point p = new Point(point);
+	public void drawCuttingPiece(CuttingPiece piece) {
+		Point point = piece.getLocation().clone();
 
-		p.translate(0, 200);
-		drawRect(p.x, p.y, piece.getWidth(), piece.getHeight(), Color.YELLOW);
+		point.translate(0, 200);
+		drawRect(point.getX(), point.getY(), piece.getWidth(), piece.getHeight(), Color.YELLOW);
 	}
 
 	public void drawSteelSheet(Point point) {
-		Point p = new Point(point);
+		Point p = point.clone();
 
 		p.translate(0, 200);
-		drawRect(p.x, p.y, CuttingRequirements.STEEL_SHEET_WIDTH,
-				CuttingRequirements.STEEL_SHEET_HEIGHT, Color.RED);
+		drawRect(p.getX(), p.getY(), CuttingRequirements.STEEL_SHEET_WIDTH, CuttingRequirements.STEEL_SHEET_HEIGHT,
+				Color.RED);
 	}
 
 	public void clear() {
