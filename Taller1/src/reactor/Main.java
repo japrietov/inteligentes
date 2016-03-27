@@ -1,8 +1,5 @@
 package reactor;
 
-import java.awt.Color;
-import java.util.List;
-
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.CandidateFactory;
@@ -17,9 +14,8 @@ import org.uncommons.watchmaker.framework.selection.TournamentSelection;
 import gui.Window;
 
 public class Main {
-	
+
 	public static void main(String[] args) throws InterruptedException {
-		Window.getInstance();
 		MersenneTwisterRNG random = new MersenneTwisterRNG();
 		CandidateFactory<CuttingSolution> candidateFactory = new CuttingSolutionCandidateFactory();
 		EvolutionaryOperator<CuttingSolution> evolutionScheme = new CuttingSolutionEvolutionaryOperator();
@@ -28,19 +24,20 @@ public class Main {
 		TerminationCondition condition = new CuttingSolutionTerminationCondition();
 		EvolutionEngine<CuttingSolution> evolutionEngine = new GenerationalEvolutionEngine<CuttingSolution>(
 				candidateFactory, evolutionScheme, fitnessEvaluator, selectionStrategy, random);
-				
+
 		CuttingRequirements.calculateHeuristics();
-		// evolutionEngine.evolve(2, 0, condition);
-		List<CuttingSolution> generateRandomCandidate = candidateFactory
-				.generateInitialPopulation(10, random);
-				
-		for (CuttingSolution boxSolution : generateRandomCandidate) {
-			Window.getInstance().setBackground(Color.BLACK);
-			
-			System.out.println(
-					boxSolution.getRequiredSteelSheets() + "--" + boxSolution.getWastedArea());
-		}
+		CuttingSolution cuttingSolution = evolutionEngine.evolve(100, 10, condition);
+
+		Window.getInstance().clear();
+		Window.getInstance().drawSteelSheet(new Point(0, 0));
+		cuttingSolution.calculateSolutionFitness();
+		System.out.println("Best Solution");
+		System.out.println("Wasted area: " + cuttingSolution.getWastedArea());
+		System.out.println("Needed steel sheets: " + cuttingSolution.getRequiredSteelSheets());
 		
+		for (CuttingPiece piece : cuttingSolution.getPieces()) {
+			Window.getInstance().drawCuttingPiece(piece);
+		}
 	}
-	
+
 }

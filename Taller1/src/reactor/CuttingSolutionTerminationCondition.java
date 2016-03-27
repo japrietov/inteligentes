@@ -9,9 +9,7 @@ public class CuttingSolutionTerminationCondition implements TerminationCondition
 	public boolean shouldTerminate(PopulationData<?> populationData) {
 		CuttingSolution cuttingSolution = (CuttingSolution) populationData.getBestCandidate();
 
-		System.out.println(cuttingSolution.getRequiredSteelSheets());
-
-		return false;
+		return cuttingSolution.getRequiredSteelSheets() <= 2;
 	}
 
 }
