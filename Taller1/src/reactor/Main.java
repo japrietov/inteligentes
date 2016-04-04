@@ -29,15 +29,10 @@ public class Main {
 		CuttingSolution cuttingSolution = evolutionEngine.evolve(100, 10, condition);
 
 		Window.getInstance().clear();
-		Window.getInstance().drawSteelSheet(new Point(0, 0));
 		cuttingSolution.calculateSolutionFitness();
 		System.out.println("Best Solution");
 		System.out.println("Wasted area: " + cuttingSolution.getWastedArea());
 		System.out.println("Needed steel sheets: " + cuttingSolution.getRequiredSteelSheets());
-		
-		for (CuttingPiece piece : cuttingSolution.getPieces()) {
-			Window.getInstance().drawCuttingPiece(piece);
-		}
 	}
 
 }

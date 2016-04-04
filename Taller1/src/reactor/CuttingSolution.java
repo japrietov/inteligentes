@@ -17,20 +17,12 @@ public class CuttingSolution {
 	}
 
 	public void calculateSolutionFitness() {
-		/*
-		 * pieces = Arrays.asList(new CuttingPiece(80, 30), new CuttingPiece(40,
-		 * 30), new CuttingPiece(20, 60), new CuttingPiece(50, 10), new
-		 * CuttingPiece(20, 30), new CuttingPiece(20, 20), new CuttingPiece(20,
-		 * 40), new CuttingPiece(40, 90), new CuttingPiece(70, 50), new
-		 * CuttingPiece(30, 80));
-		 */
-
 		initializeProperties();
 
 		for (CuttingPiece piece : pieces) {
 			calculatePieceLocation(piece);
 			employedArea += piece.getSize();
-			//Window.getInstance().drawCuttingPiece(piece);
+			Window.getInstance().drawCuttingPiece(piece);
 		}
 	}
 
@@ -40,8 +32,8 @@ public class CuttingSolution {
 		employedArea = 0;
 		usedSteelSheets = 1;
 		maxLastWidth = 0;
-//		Window.getInstance().clear();
-//		Window.getInstance().drawSteelSheet(new Point(x, y));
+		Window.getInstance().clear();
+		Window.getInstance().drawSteelSheet(new Point(x, y));
 	}
 
 	private void calculatePieceLocation(CuttingPiece piece) {
@@ -50,7 +42,7 @@ public class CuttingSolution {
 		double nextX = x + piece.getWidth();
 		piece.setLocation(x, y);
 
-		if (nextX <= xMaxCurrentSteelSheet() && nextY <= steelSheetHeight) {
+		if ((nextX <= xMaxCurrentSteelSheet()) && (nextY <= steelSheetHeight)) {
 			y += piece.getHeight();
 			setMaxLastWidth(x + piece.getWidth());
 		}
@@ -66,7 +58,7 @@ public class CuttingSolution {
 			x = xMaxCurrentSteelSheet();
 			y = 0;
 			usedSteelSheets++;
-//			Window.getInstance().drawSteelSheet(new Point(x, y));
+			Window.getInstance().drawSteelSheet(new Point(x, y));
 			calculatePieceLocation(piece);
 		}
 	}
