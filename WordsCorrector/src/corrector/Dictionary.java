@@ -19,8 +19,9 @@ public class Dictionary {
 	private File dictionaryFile;
 
 	private Dictionary() {
-		dictionaryFile = FileUtils.getFile("source/spanish.txt");
+		dictionaryFile = FileUtils.getFile("../source/spanish.txt");
 		loadLocalDictionary();
+
 	}
 
 	public static Dictionary getInstance() {
