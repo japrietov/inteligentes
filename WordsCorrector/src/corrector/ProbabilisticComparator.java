@@ -1,32 +1,46 @@
 package corrector;
 
-import java.text.MessageFormat;
 import java.util.Comparator;
+
+import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class ProbabilisticComparator implements Comparator<String> {
 
-	public int compare(String o1, String o2) {
-		int equal = -1;
+	public int compare(String word1, String word2) {
+		boolean equal = false;
+		int result = word1.compareTo(word2);
 
-		if (o1.length() == o2.length()) {
-			float equality = calcEquality(o1, o2);
-
-			if (equality > 0.9) {
-				System.out.println(MessageFormat.format("{0} {1} {2}", o1, o2, equality));
+		if (result != 0) {
+			equal = matchByIndexes(word1, word2);// ||
+													// matchByFuzzyDistance(word1,
+													// word2);
+			if (equal) {
+				result = 0;
 			}
 		}
 
-		return o1.compareTo(o2);
+		return result;
 	}
 
-	private float calcEquality(String o1, String o2) {
+	private static boolean matchByFuzzyDistance(String word1, String word2) {
+		int fuzzyDistance = StringUtils.getFuzzyDistance(word2, word1, LocaleUtils.toLocale("es"));
+
+		return fuzzyDistance >= word1.length() * 2;
+	}
+
+	private static boolean matchByIndexes(String word1, String word2) {
+		return word1.length() == word2.length() && calcEquality(word1, word2) >= 0.9f;
+	}
+
+	private static float calcEquality(String word1, String word2) {
 		float equality = 0;
 
-		for (int i = 0; i < o1.length(); i++) {
-			equality += o1.charAt(i) == o2.charAt(i) ? 1 : 0;
+		for (int i = 0; i < word1.length(); i++) {
+			equality += word1.charAt(i) == word2.charAt(i) ? 1 : 0;
 		}
 
-		return equality / o1.length();
+		return equality / word1.length();
 	}
 
 }

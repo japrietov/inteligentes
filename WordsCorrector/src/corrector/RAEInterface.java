@@ -3,8 +3,6 @@ package corrector;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,11 +15,9 @@ public class RAEInterface {
 	private String url = "http://dle.rae.es/srv/search?w=%s";
 	private static RAEInterface instance;
 	private HttpClient client;
-	private HttpGet request;
 
 	private RAEInterface() {
 		client = HttpClientBuilder.create().build();
-		request = new HttpGet();
 	}
 
 	public static RAEInterface getInstance() {
@@ -37,9 +33,9 @@ public class RAEInterface {
 		HttpResponse response;
 		BufferedReader bufferedReader;
 		String line = "";
+		HttpGet request = new HttpGet(String.format(url, word));
 
 		try {
-			request.setURI(new URI(String.format(url, word)));
 			request.addHeader("User-Agent", USER_AGENT);
 			response = client.execute(request);
 			bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -47,13 +43,11 @@ public class RAEInterface {
 			while ((line = bufferedReader.readLine()) != null) {
 				responseText.append(line);
 			}
-			
+
 			bufferedReader.close();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 

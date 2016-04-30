@@ -1,47 +1,26 @@
 package corrector;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import javax.swing.JOptionPane;
 
 public class Main {
 
 	public static void main(String[] args) {
-		List<String[]> malformedWords = WordsCorrector.getMalformedWords();
-
-		for (String[] word : malformedWords) {
-			String fixWord = word[1];
-			String wordText = word[0];
-
-			if (!Boolean.valueOf(fixWord) && !wordText.startsWith("@") && !wordText.startsWith("#")) {
-				fixWord(wordText);
-			}
+		if (args.length == 1) {
+			WordsCorrector.fixWords(args[0]);
+		} else {
+			showMessage("Debe pasar como parámetro el nombre del archivo de entrada",
+					"ejemplo: java -jar corrector.jar filename.txt");
 		}
 	}
 
-	private static void fixWord(String malformedWord) {
-		List<String> dictionary = WordsCorrector.getDictionary();
+	public static void showMessage(String... messages) {
+		String message = Arrays.toString(messages).replace("[", "").replace("]", "").replace(", ",
+				System.lineSeparator());
 
-		Collections.sort(dictionary);
-
-		int index = Collections.binarySearch(dictionary, malformedWord, null);// new
-																				// ProbabilisticComparator());
-
-		if (index > 0) {
-			System.out.println(malformedWord + " " + dictionary.get(index));
-		} else {
-			System.err.println("\"" + malformedWord + "\"" + " no se encontró, buscando en la RAE");
-			String[] suggestedWords = Dictionary.getInstance().checkWord(malformedWord);
-			System.err.println("\"" + malformedWord + "\"" + Arrays.toString(suggestedWords));
-		}
-
+		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+		System.err.println(message);
 	}
 
 }
