@@ -4,6 +4,7 @@
 	<groupId>WordsCorrector</groupId>
 	<artifactId>WordsCorrector</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -34,9 +35,30 @@
 				<version>3.3</version>
 				<configuration>
 					<source />
-					<target />
+					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<finalName>corrector</finalName>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>corrector.Main</mainClass>
+						</manifest>
+						<manifestEntries>
+							<mode>development</mode>
+							<url>${project.url}</url>
+							<key>value</key>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
