@@ -31,9 +31,9 @@
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>.</directory>
+				<directory>resources</directory>
 				<includes>
-					<include>source/spanish.txt</include>
+					<include>spanish.txt</include>
 				</includes>
 			</resource>
 		</resources>
@@ -71,11 +71,9 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<finalName>corrector</finalName>
-				</configuration>
 			</plugin>
 
 		</plugins>
+		<finalName>corrector</finalName>
 	</build>
 </project>

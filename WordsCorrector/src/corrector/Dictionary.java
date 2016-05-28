@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,9 +20,7 @@ public class Dictionary {
 	private File dictionaryFile;
 
 	private Dictionary() {
-		dictionaryFile = FileUtils.getFile("../source/spanish.txt");
 		loadLocalDictionary();
-
 	}
 
 	public static Dictionary getInstance() {
@@ -34,7 +33,7 @@ public class Dictionary {
 
 	public String checkWord(String word) {
 		int wordIndex;
-		String suggestedWord = null;
+		String suggestedWord = word;
 		ProbabilisticComparator comparator = new ProbabilisticComparator();
 
 		wordIndex = Collections.binarySearch(localDictionary, word, null);
@@ -128,14 +127,15 @@ public class Dictionary {
 
 	private void loadLocalDictionary() {
 		localDictionary = new ArrayList<String>(Arrays.asList(readLocalDictionary().split(", ")));
-		Collections.sort(localDictionary);
+		// Collections.sort(localDictionary);
 	}
 
 	private String readLocalDictionary() {
 		String fileContent = null;
 
 		try {
-			fileContent = FileUtils.readFileToString(dictionaryFile, Charsets.UTF_8);
+			fileContent = IOUtils
+					.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("spanish.txt"));
 		} catch (IOException e) {
 			Main.showMessage("No fué posible cargar el archivo del diccionario", e.getMessage());
 			System.exit(0);

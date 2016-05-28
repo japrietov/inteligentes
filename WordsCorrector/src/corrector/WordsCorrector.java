@@ -8,27 +8,31 @@ import java.util.List;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 
 public class WordsCorrector {
 
-	private static List<String[]> readWordsToFix(String fileName) {
-		ArrayList<String[]> words = new ArrayList<String[]>();
-		String[] tokens;
+	private static List<Tweet> readTweetsToFix(String fileName) {
+		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+		String[] lines = loadWordsFromFile(fileName).split(System.lineSeparator());
 
-		tokens = loadWordsFromFile(fileName).replace(System.lineSeparator(), ",").split(",");
+		for (String tweet : lines) {
+			String[] tweetWords = tweet.split(",");
+			Tweet tweetObject = new Tweet();
 
-		for (String string : tokens) {
-			String[] splittedToken = StringUtils.split(string.trim());
+			for (String word : tweetWords) {
+				String[] splittedToken = word.trim().split(" ");
 
-			if (splittedToken.length == 2) {
-				words.add(splittedToken);
-			} else {
-				Main.showMessage("Token mal formado", Arrays.toString(splittedToken));
+				if (splittedToken.length == 2) {
+					tweetObject.addWord(new Word(splittedToken[0], splittedToken[1]));
+				} else {
+					Main.showMessage("Token mal formado", Arrays.toString(splittedToken));
+				}
 			}
+
+			tweets.add(tweetObject);
 		}
 
-		return words;
+		return tweets;
 	}
 
 	private static String loadWordsFromFile(String fileName) {
@@ -45,31 +49,29 @@ public class WordsCorrector {
 		return fileContent;
 	}
 
-	public static void fixWords(String fileName) {
-		File file = new File("fixedWords.txt");
-		List<String[]> requests = readWordsToFix(fileName);
-		String result = "";
+	public static void fixTweets(String fileName) {
+		File file = new File("fixedTweets.txt");
+		List<Tweet> tweets = readTweetsToFix(fileName);
 
-		writeFile(file, result, false);
+		writeFile(file, "", false);
 
-		for (int i = 0; i < requests.size(); i++) {
-			String[] request = requests.get(i);
+		for (int i = 0; i < tweets.size(); i++) {
+			Tweet tweet = tweets.get(i);
 
-			if (request.length == 2) {
-				String fixWord = request[1];
-				String word = request[0];
+			for (Word word : tweet.getWords()) {
+				boolean isNumber = word.getText().replaceFirst("\\d*\\s*", "").equals("");
 
-				boolean isNumber = word.replaceFirst("\\d*\\s*", "").equals("");
+				if (word.checkWord() && !word.getText().startsWith("@") && !word.getText().startsWith("#")
+						&& !isNumber) {
+					String fixedWord = Dictionary.getInstance().checkWord(word.getText());
 
-				if (!Boolean.valueOf(fixWord) && !word.startsWith("@") && !word.startsWith("#") && !isNumber) {
-					String fixedWord = Dictionary.getInstance().checkWord(word);
-					result = word + ":" + fixedWord + ",";// System.lineSeparator();
-
-					writeFile(file, result, true);
+					word.setText(fixedWord);
 				}
 
-				System.err.println((float) i * 100 / requests.size() + "%");
+				System.err.println((float) i * 100 / tweets.size() + "%");
 			}
+
+			writeFile(file, tweet.toString().concat(System.lineSeparator()), true);
 		}
 
 	}
