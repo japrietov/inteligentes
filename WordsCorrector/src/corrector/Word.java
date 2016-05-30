@@ -9,6 +9,10 @@ public class Word {
 		this.checkWord = checkWord.trim().equals("0");
 	}
 
+	public Word(String text) {
+		this.text = text;
+	}
+
 	public String getText() {
 		return text;
 	}

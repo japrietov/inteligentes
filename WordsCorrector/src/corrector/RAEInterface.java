@@ -1,11 +1,9 @@
 package corrector;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -33,9 +31,9 @@ public class RAEInterface {
 		HttpResponse response;
 		BufferedReader bufferedReader;
 		String line = "";
-		HttpGet request = new HttpGet(String.format(url, word));
 
 		try {
+			HttpGet request = new HttpGet(String.format(url, word));
 			request.addHeader("User-Agent", USER_AGENT);
 			response = client.execute(request);
 			bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -45,9 +43,7 @@ public class RAEInterface {
 			}
 
 			bufferedReader.close();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

@@ -21,11 +21,15 @@ public class WordsCorrector {
 
 			for (String word : tweetWords) {
 				String[] splittedToken = word.trim().split(" ");
+				String token = splittedToken[0].trim();
 
 				if (splittedToken.length == 2) {
-					tweetObject.addWord(new Word(splittedToken[0], splittedToken[1]));
+					tweetObject.addWord(new Word(token, splittedToken[1].trim()));
 				} else {
-					Main.showMessage("Token mal formado", Arrays.toString(splittedToken));
+					if (!token.equals("0") && !token.equals("1")) {
+						tweetObject.addWord(new Word(token));
+					}
+					System.err.println("Token incorrecto " + Arrays.toString(splittedToken));
 				}
 			}
 
