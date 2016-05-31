@@ -7,7 +7,7 @@ class ExamplePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        self.SetBackgroundColour((0, 172, 237))
+        self.SetBackgroundColour((17, 193, 255))
         img = wx.Image("t.png", wx.BITMAP_TYPE_ANY)
         self.imageCtrl = wx.StaticBitmap(self, wx.ID_ANY, wx.BitmapFromImage(img), pos=(250, 200))
         self.lblname = wx.StaticText(self, label="Tweet", pos=(20, 60))
@@ -32,7 +32,7 @@ class ExamplePanel(wx.Panel):
         if resultado == "positivo":
             self.SetBackgroundColour((0, 255, 0))
         else:
-            self.SetBackgroundColour((0, 172, 237))
+            self.SetBackgroundColour((17, 193, 255))
 
 
 class MainWindow(wx.Frame):
