@@ -7,7 +7,9 @@ class ExamplePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        # the edit control - one line version.
+        self.SetBackgroundColour((0, 172, 237))
+        img = wx.Image("t.png", wx.BITMAP_TYPE_ANY)
+        self.imageCtrl = wx.StaticBitmap(self, wx.ID_ANY, wx.BitmapFromImage(img), pos=(250, 200))
         self.lblname = wx.StaticText(self, label="Tweet", pos=(20, 60))
         self.textBox = wx.TextCtrl(self, value="", pos=(70, 55), size=(700, -1))
         self.button = wx.Button(self, label="Analizar", pos=(20, 100))
@@ -30,7 +32,7 @@ class ExamplePanel(wx.Panel):
         if resultado == "positivo":
             self.SetBackgroundColour((0, 255, 0))
         else:
-            self.SetBackgroundColour((255, 0, 0))
+            self.SetBackgroundColour((0, 172, 237))
 
 
 class MainWindow(wx.Frame):
